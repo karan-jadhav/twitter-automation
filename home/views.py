@@ -8,10 +8,19 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from .models import  AccessToken
 from django.contrib import  messages
+from django.core.files.storage import FileSystemStorage
 CONSUMER_KEY = settings.CONSUMER_KEY
 CONSUMER_SECRET = settings.CONSUMER_SECRET
 
 # Create your views here.
+
+def twitter_api(user):
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+    userObj = User.objects.get(username=user.username)
+    tokens = userObj.accesstoken_set.get()
+    auth.set_access_token(tokens.access_token, tokens.access_token_secrete)
+    api = tweepy.API(auth)
+    return api
 
 def index(request):
     if request.user.is_authenticated:
@@ -65,7 +74,20 @@ def callback(request):
 
 def tweet(request):
     if request.method == "POST":
-        print(request.POST.get('file'))
+        api = twitter_api(request.user)
+        status = request.POST.get('tweet')
+        if 'file' in request.FILES:
+            a = request.FILES['file'].name
+            if a.endswith(".png") or a.endswith(".jpeg") or a.endswith(".jpg"):
+                fs = FileSystemStorage()
+                fileobj = fs.save(a, request.FILES['file'])
+                api.update_with_media(fs.path(fileobj), status)
+                fs.delete(fileobj)
+                messages.success(request, 'Successfully tweeted')
+            else:
+                messages.warning(request, "Must Be a Image File")
+        else:
+            api.update_status(status)
     return render(request, 'home/tweet.html')
 
 def schedule(request):
