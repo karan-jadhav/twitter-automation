@@ -11,13 +11,12 @@
     <br><br>
     
     {% if auth %}
-    <p>Go to dashboard</p>
+    <a href="{% url 'home-dash' %}" class="btn btn-danger">Go to dashboard</a><br><br><br>    
     {% else %}
-    <div class="card shadow-lg col-4 text-center border-0">
-        <div class="card-body">
-            <a href="{{ url }}"><img src="{% static 'home/twitter-signin.png' %}" alt="" height="60" width="300"></a> 
-        </div>
-    </div>
+    
+            <a href="{{ url }}" class="btn btn-primary btn-lg shadow">Log In With Twitter&nbsp; <i class="fab fa-twitter"></i> </a>
+            {% comment %} <a href="{{ url }}"><img src="{% static 'home/twitter-signin.png' %}" alt="" height="60" width="300"></a>  {% endcomment %}
+    
     {% endif %}
     <br>
 </center>

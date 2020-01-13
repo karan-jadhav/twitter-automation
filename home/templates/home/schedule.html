@@ -1,0 +1,22 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<br>
+<h1>Schedule Tweets</h1>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-6 offset-3">
+                <form action="" method="post" class="form-group">
+                {% csrf_token %}
+                    <label for="tweet">Tweet Text</label> 
+                    <textarea name="tweet" id="" cols="40" rows="3" class="form-control" required></textarea>
+                    <br>
+                    <label for="file">File (Optional)</label>
+                    <input type="file" name="file" id="" class="form-control-file"><br><br>
+                    <input type="submit" name="submit" id="" value="Tweet" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+    </div>
+   
+{% endblock content %}

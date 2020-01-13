@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib.auth.models import User
 from .models import  AccessToken
+from django.contrib import  messages
 CONSUMER_KEY = settings.CONSUMER_KEY
 CONSUMER_SECRET = settings.CONSUMER_SECRET
 
@@ -19,13 +20,11 @@ def index(request):
         }    
     else:
         if 'request_token' in request.session and 'redirect_url' in request.session:
-            print('already  generated')
             context = {
                 'url': request.session['redirect_url'], 
                 'auth': False
             }
         else:
-            print('new generated')
             auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
             redirect_url = auth.get_authorization_url()
             request.session['redirect_url'] = redirect_url
@@ -52,14 +51,25 @@ def callback(request):
     if User.objects.filter(username=me.screen_name).count() > 0:
         user = User.objects.get(username=me.screen_name)
         login(request, user)
+        messages.success(request, 'Successfully SignedIn')
         return redirect('home-dash')
     else:
         user_obj = User.objects.create_user(username=me.screen_name)
         user_obj.save()
         access_model = AccessToken.objects.create(user=user_obj, access_token=access_token, access_token_secrete=access_token_secret)
         access_model.save()
+        login(request, user_obj)
+        messages.success(request, 'Successfully SignedUp')
         return redirect('home-dash')
     return HttpResponse('Something is wrong')
+
+def tweet(request):
+    if request.method == "POST":
+        print(request.POST.get('file'))
+    return render(request, 'home/tweet.html')
+
+def schedule(request):
+    return render(request, 'home/schedule.html')
 
 def logout_request(request):
     logout(request)
