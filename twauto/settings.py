@@ -131,3 +131,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+CONSUMER_KEY = config('consumer_key')
+CONSUMER_SECRET = config('consumer_secret')

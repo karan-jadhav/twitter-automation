@@ -7,13 +7,18 @@
 {% block content %}
 <br><br><br>
 <center>
-    <h1><img src="{% static 'home/twitter-noloop.gif' %}" alt="" height="230" width="300"> Automation</h1> 
+    <h1><img src="{% static 'home/twitter-noloop.gif' %}" alt="" height="230" width="300"> Marketing </h1> 
     <br><br>
+    
+    {% if auth %}
+    <p>Go to dashboard</p>
+    {% else %}
     <div class="card shadow-lg col-4 text-center border-0">
         <div class="card-body">
-            <a href=""><img src="{% static 'home/twitter-signin.png' %}" alt="" height="60" width="300"></a> 
+            <a href="{{ url }}"><img src="{% static 'home/twitter-signin.png' %}" alt="" height="60" width="300"></a> 
         </div>
-      </div>
+    </div>
+    {% endif %}
     <br>
 </center>
 

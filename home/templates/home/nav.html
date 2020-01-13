@@ -12,9 +12,7 @@
     </ul>
     <ul class="navbar-nav">
     {% if user.is_authenticated %}
-    <li class="nav-item active"><a class="nav-link" href="{% url 'home-page' %}">Logout </a></li>
-    {% else %}
-    
+    <li class="nav-item active"><a class="nav-link" href="{% url 'logout' %}">Logout </a></li>
     {% endif %}
       
     </ul>
