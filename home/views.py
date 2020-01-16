@@ -91,7 +91,10 @@ def tweet(request):
     return render(request, 'home/tweet.html')
 
 def schedule(request):
-    return render(request, 'home/schedule.html')
+    context = {
+        'schedule':True
+        }
+    return render(request, 'home/schedule.html', context)
 
 def logout_request(request):
     logout(request)
