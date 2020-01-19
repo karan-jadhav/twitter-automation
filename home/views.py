@@ -135,7 +135,7 @@ def schedule(request):
                         user=request.user, tweet=status, twFile=request.FILES['file']
                     )
                     sch.save()
-                    schedule_tweet(sch.id, schedule=diffSecond)
+                    schedule_tweet(sch.id, schedule=diffSecond, priority=5)
                     messages.success(
                         request, 'Successfully Scheduled for {}'.format(request.POST.get("sc-date")))
                 else:
@@ -145,7 +145,7 @@ def schedule(request):
                     user=request.user, tweet=status
                 )
                 sch.save()
-                schedule_tweet(sch.id, schedule=diffSecond)
+                schedule_tweet(sch.id, schedule=diffSecond, priority=5)
                 messages.success(
                     request, 'Successfully Scheduled for {}'.format(request.POST.get("sc-date")))
     return render(request, 'home/schedule.html', context)
