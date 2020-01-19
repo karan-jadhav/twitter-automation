@@ -23,7 +23,7 @@ def schedule_tweet(tweetid):
     api = twitter_api(getTweet.user)
     status = getTweet.tweet
     if bool(getTweet.twFile):
-        fileName = str(settings.BASE_DIR)+'/'+str(getTweet.twFile.name)
+        fileName = str(settings.BASE_DIR)+'/media/'+str(getTweet.twFile.name)
         api.update_with_media(fileName, status)
     else:
         api.update_status(status)
