@@ -2,6 +2,11 @@
 
 {% block content %}
 <br>
+{% if messages %}
+    {% for message in messages %}
+        <p class="alert alert-{{message.tags}}">{{ message }}</p>
+    {% endfor %}
+{% endif %}
 <h1>Schedule Tweets</h1>
     <div class="container mt-5">
         <div class="row">
@@ -9,10 +14,10 @@
                 <form action="" method="post" class="form-group">
                 {% csrf_token %}
                     <label for="tweet">Tweet Text</label> 
-                    <textarea name="tweet" id="" cols="40" rows="3" class="form-control" required></textarea>
+                    <textarea name="tweet" id="tweet" cols="40" rows="3" class="form-control" required></textarea>
                     <br>
                     <label for="file">File (Optional)</label>
-                    <input type="file" name="file" id="" class="form-control-file"><br><br>
+                    <input type="file" name="file" id="File" class="form-control-file"><br><br>
                     <label for="date">Select Date</label>
                     <input class="form-control" name="sc-date" type="text" id="date" placeholder="Select Date" required><br>
                     <input class="form-control" name="sc-time" type="text" id="time" placeholder="Select Time" required><br>

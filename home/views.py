@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from .models import  AccessToken
 from django.contrib import  messages
 from django.core.files.storage import FileSystemStorage
+from dateutil import parser
+from datetime import datetime
 CONSUMER_KEY = settings.CONSUMER_KEY
 CONSUMER_SECRET = settings.CONSUMER_SECRET
 
@@ -94,6 +96,30 @@ def schedule(request):
     context = {
         'schedule':True
         }
+    if request.method == "POST":
+        # userTime = parser.parse(str(request.POST.get("sc-date"))+" "+str(request.POST.get("sc-time")))
+        # currTime = datetime.now().replace(second=0, microsecond=0)
+        # if userTime <= currTime:
+        #     messages.warning(request, "You Selected Previous Time")
+        #     return redirect("home-schedule")
+        # else:
+        #     diffTime = userTime - datetime.now()
+        #     diffSecond = diffTime.seconds
+        #     print(diffSecond)
+            
+        
+        
+        # b = a - datetime.now()
+        # print(b.seconds)
+        # print(a.seconds)
+        # print(a.month)
+        # print(a.year)
+        # print(a.day)
+        # print(a.hour)
+        # print(a.minute)
+        # print(request.POST.get("tweet"))
+        print(request.POST.get("sc-date"))
+        print(request.POST.get("sc-time"))
     return render(request, 'home/schedule.html', context)
 
 def logout_request(request):
