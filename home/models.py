@@ -11,4 +11,4 @@ class AccessToken(models.Model):
 class Schedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tweet = models.TextField()
-    twFile = models.FileField(upload_to='media', blank=True, null=True)
+    twFile = models.FileField(blank=True, null=True)
