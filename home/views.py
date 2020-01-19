@@ -63,9 +63,6 @@ def index(request):
 
 @login_required(login_url='home-page')
 def home(request):
-    # getTweet = Schedule.objects.get(user=request.user)
-    print(settings.BASE_DIR)
-
     return render(request, 'home/home.html')
 
 
@@ -140,7 +137,7 @@ def schedule(request):
                     sch.save()
                     schedule_tweet(sch.id, schedule=diffSecond)
                     messages.success(
-                        request, 'Successfully Scheduled for <b>{}</b>'.format(request.POST.get("sc-date")))
+                        request, 'Successfully Scheduled for {}'.format(request.POST.get("sc-date")))
                 else:
                     messages.warning(request, "Must Be a Image File")
             else:
@@ -150,7 +147,7 @@ def schedule(request):
                 sch.save()
                 schedule_tweet(sch.id, schedule=diffSecond)
                 messages.success(
-                    request, 'Successfully Scheduled for <b>{}</b>'.format(request.POST.get("sc-date")))
+                    request, 'Successfully Scheduled for {}'.format(request.POST.get("sc-date")))
     return render(request, 'home/schedule.html', context)
 
 
