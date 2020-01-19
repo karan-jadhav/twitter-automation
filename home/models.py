@@ -8,5 +8,7 @@ class AccessToken(models.Model):
     access_token_secrete = models.CharField(max_length=200)
 
 
-class Tweets(models.Model):
-    pass
+class Schedule(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    tweet = models.TextField()
+    twFile = models.FileField(upload_to='media', blank=True, null=True)
