@@ -12,6 +12,7 @@ from django.core.files.storage import FileSystemStorage
 from dateutil import parser
 from datetime import datetime
 from background_task import background
+from django.conf import settings
 CONSUMER_KEY = settings.CONSUMER_KEY
 CONSUMER_SECRET = settings.CONSUMER_SECRET
 
@@ -22,7 +23,7 @@ def schedule_tweet(tweetid):
     api = twitter_api(getTweet.user)
     status = getTweet.tweet
     if bool(getTweet.twFile):
-        fileName = getTweet.twFile.name
+        fileName = str(settings.BASE_DIR)+'/'+str(getTweet.twFile.name)
         api.update_with_media(fileName, status)
     else:
         api.update_status(status)
@@ -62,6 +63,9 @@ def index(request):
 
 @login_required(login_url='home-page')
 def home(request):
+    # getTweet = Schedule.objects.get(user=request.user)
+    print(settings.BASE_DIR)
+
     return render(request, 'home/home.html')
 
 
