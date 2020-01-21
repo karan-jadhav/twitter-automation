@@ -12,3 +12,9 @@ class Schedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tweet = models.TextField()
     twFile = models.FileField(blank=True, null=True)
+
+
+class Log(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    action = models.CharField(max_length=200)

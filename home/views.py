@@ -6,7 +6,7 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib.auth.models import User
-from .models import AccessToken, Schedule
+from .models import AccessToken, Schedule, Log
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from dateutil import parser
@@ -32,8 +32,14 @@ def schedule_tweet(tweetid):
     if bool(getTweet.twFile):
         fileName = str(settings.BASE_DIR)+'/media/'+str(getTweet.twFile.name)
         api.update_with_media(fileName, status)
+        log = Log.objects.create(
+            user=getTweet.user, action="Scheduled Tweet With Image")
+        log.save()
     else:
         api.update_status(status)
+        log = Log.objects.create(
+            user=getTweet.user, action="Scheduled Text Tweet")
+        log.save()
 
 
 def get_plot(user):
@@ -97,6 +103,7 @@ def get_plot(user):
     graphic = graphic.decode('utf-8')
     return graphic
 
+
 def twitter_api(user):
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     userObj = User.objects.get(username=user.username)
@@ -133,7 +140,7 @@ def index(request):
 @login_required(login_url='home-page')
 def home(request):
     context = {
-        'page':'dash'
+        'page': 'dash'
     }
     return render(request, 'home/home.html', context)
 
@@ -175,12 +182,17 @@ def tweet(request):
                 fs = FileSystemStorage()
                 fileobj = fs.save(a, request.FILES['file'])
                 api.update_with_media(fs.path(fileobj), status)
+                log = Log.objects.create(
+                    user=request.user, action="Tweet With Image")
+                log.save()
                 fs.delete(fileobj)
                 messages.success(request, 'Successfully tweeted')
             else:
                 messages.warning(request, "Must Be a Image File")
         else:
             api.update_status(status)
+            log = Log.objects.create(user=request.user, action="Text Tweet")
+            log.save()
     return render(request, 'home/tweet.html')
 
 
@@ -208,31 +220,37 @@ def schedule(request):
                     )
                     sch.save()
                     schedule_tweet(sch.id, schedule=diffSecond, priority=5)
+                    log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Media".format(str(request.POST.get(
+                    "sc-date"))+" "+str(request.POST.get("sc-time")))
+                    log.save()
                     messages.success(
                         request, 'Successfully Scheduled for {} {}'.format(request.POST.get("sc-date"), request.POST.get("sc-time")))
                 else:
                     messages.warning(request, "Must Be a Image File")
             else:
-                sch = Schedule.objects.create(
+                sch=Schedule.objects.create(
                     user=request.user, tweet=status
                 )
                 sch.save()
                 schedule_tweet(sch.id, schedule=diffSecond, priority=5)
+                log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Text".format(str(request.POST.get(
+                    "sc-date"))+" "+str(request.POST.get("sc-time")))
+                log.save()
                 messages.success(
-                    request, 'Successfully Scheduled for {} {}'.format(request.POST.get("sc-date"), request.POST.get("sc-time")))              
+                    request, 'Successfully Scheduled for {} {}'.format(request.POST.get("sc-date"), request.POST.get("sc-time")))
     return render(request, 'home/schedule.html', context)
 
 
 def do_sentiment(request):
-    Plot = get_plot(request.user)
-    context = {
+    Plot=get_plot(request.user)
+    context={
         'graphic': Plot,
     }
     return render(request, 'home/sentiment.html', {'graphic': Plot})
 
 def sentimental_redirect(request):
-    context = {
-        'analyze':True
+    context={
+        'analyze': True
     }
     return render(request, 'home/sentiment_redirect.html', context)
 
