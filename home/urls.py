@@ -10,5 +10,7 @@ urlpatterns = [
     path('logout/', view.logout_request, name='logout'),
     path('tweet/', view.tweet, name='home-tweet'),
     path('schedule/', view.schedule, name='home-schedule'),
+    path('sentiment/', view.do_sentiment, name='home-sentiment'),
+    path('sentimental_redirect/', view.sentimental_redirect, name='sent-redirect'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
