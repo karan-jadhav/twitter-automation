@@ -220,21 +220,21 @@ def schedule(request):
                     )
                     sch.save()
                     schedule_tweet(sch.id, schedule=diffSecond, priority=5)
-                    log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Media".format(str(request.POST.get(
-                    "sc-date"))+" "+str(request.POST.get("sc-time")))
+                    log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Media".format(
+                        str(request.POST.get("sc-date"))+" "+str(request.POST.get("sc-time"))))
                     log.save()
                     messages.success(
                         request, 'Successfully Scheduled for {} {}'.format(request.POST.get("sc-date"), request.POST.get("sc-time")))
                 else:
                     messages.warning(request, "Must Be a Image File")
             else:
-                sch=Schedule.objects.create(
+                sch = Schedule.objects.create(
                     user=request.user, tweet=status
                 )
                 sch.save()
                 schedule_tweet(sch.id, schedule=diffSecond, priority=5)
-                log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Text".format(str(request.POST.get(
-                    "sc-date"))+" "+str(request.POST.get("sc-time")))
+                log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Text".format(
+                    str(request.POST.get("sc-date"))+" "+str(request.POST.get("sc-time"))))
                 log.save()
                 messages.success(
                     request, 'Successfully Scheduled for {} {}'.format(request.POST.get("sc-date"), request.POST.get("sc-time")))
@@ -242,17 +242,19 @@ def schedule(request):
 
 
 def do_sentiment(request):
-    Plot=get_plot(request.user)
-    context={
+    Plot = get_plot(request.user)
+    context = {
         'graphic': Plot,
     }
     return render(request, 'home/sentiment.html', {'graphic': Plot})
 
+
 def sentimental_redirect(request):
-    context={
+    context = {
         'analyze': True
     }
     return render(request, 'home/sentiment_redirect.html', context)
+
 
 def logout_request(request):
     logout(request)
