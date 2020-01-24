@@ -7,4 +7,34 @@
     <div class="container mt-2">
         <img src="data:image/png;base64,{{ graphic|safe }}">
     </div>
+    <table class="table table-striped table-bordered" id="sent_table">
+        <thead>
+            <tr>
+            <th scope="col">Id</th>
+            <th scope="col">User</th>
+            <th scope="col">Tweet</th>
+            <th scope="col">Sentiment</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for key, data in table.items %}
+            <tr>
+                <td>{{key}}</td>
+                <td>{{ data.screenname }}</td>
+                <td>{{ data.tweet }}</td>
+                <td>{{ data.polarity }}</td>
+                
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="row mt-3">
+        <h3>Export Data</h3>
+    </div>
+    <select id="exportLink" class='form-control mt-3 mb-5'>
+        <option  disabled selected>Export userlist</option>
+        <option id="csv">Export as CSV</option>
+        <option id="pdf">Export as PDF</option>
+        <option id="print">Print</option>
+    </select>
 {% endblock content %}
