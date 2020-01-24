@@ -270,7 +270,11 @@ def sentimental_redirect(request):
 
 
 def show_logs(request):
-    return render(request, 'home/logs.html')
+    all_logs = Log.objects.filter(user=request.user)
+    context = {
+        'logs': all_logs
+    }
+    return render(request, 'home/logs.html', context)
 
 def logout_request(request):
     logout(request)
