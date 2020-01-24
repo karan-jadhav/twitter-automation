@@ -51,28 +51,39 @@ def get_plot(user):
     wnegative = 0
     snegative = 0
     neutral = 0
+    table = {}
     api = twitter_api(user)
     mentions = api.mentions_timeline()
     NoOfMentions = len(mentions)
+    itrCount = 0
     for mention in mentions:
         text = ' '.join(re.sub(
             "(@[A-Za-z0-9]+)|([^0-9A-Za-z \t]) | (\w +:\ / \ / \S +)", " ", mention.text).split())
         analysis = TextBlob(text)
         polarity += analysis.sentiment.polarity
+        table[itrCount] = {"tweet":mention.text, "screenname":mention.user.screen_name}
         if (analysis.sentiment.polarity == 0):
             neutral += 1
+            table[itrCount]['polarity'] = "Neutral"
         elif (analysis.sentiment.polarity > 0 and analysis.sentiment.polarity <= 0.3):
             wpositive += 1
+            table[itrCount]['polarity'] = "Weakly Positive"
         elif (analysis.sentiment.polarity > 0.3 and analysis.sentiment.polarity <= 0.6):
             positive += 1
+            table[itrCount]['polarity'] = "Positive"
         elif (analysis.sentiment.polarity > 0.6 and analysis.sentiment.polarity <= 1):
             spositive += 1
+            table[itrCount]['polarity'] = "Strongly Positive"
         elif (analysis.sentiment.polarity > -0.3 and analysis.sentiment.polarity <= 0):
             wnegative += 1
+            table[itrCount]['polarity']="Weakly negative"
         elif (analysis.sentiment.polarity > -0.6 and analysis.sentiment.polarity <= -0.3):
             negative += 1
+            table[itrCount]['polarity'] = "Negative"
         elif (analysis.sentiment.polarity > -1 and analysis.sentiment.polarity <= -0.6):
             snegative += 1
+            table[itrCount]['polarity'] = "Strongly Negative"
+        itrCount+=1
 
     positive = format(100 * float(positive) / float(NoOfMentions), '.2f')
     wpositive = format(100 * float(wpositive) / float(NoOfMentions), '.2f')
@@ -101,7 +112,7 @@ def get_plot(user):
     buffer.close()
     graphic = base64.b64encode(image_png)
     graphic = graphic.decode('utf-8')
-    return graphic
+    return graphic, table
 
 
 def twitter_api(user):
@@ -242,11 +253,13 @@ def schedule(request):
 
 
 def do_sentiment(request):
-    Plot = get_plot(request.user)
+    Plot, table = get_plot(request.user)
     context = {
+        'sentiment': True,
         'graphic': Plot,
+        'table': table
     }
-    return render(request, 'home/sentiment.html', {'graphic': Plot})
+    return render(request, 'home/sentiment.html', context)
 
 
 def sentimental_redirect(request):
@@ -255,6 +268,9 @@ def sentimental_redirect(request):
     }
     return render(request, 'home/sentiment_redirect.html', context)
 
+
+def show_logs(request):
+    return render(request, 'home/logs.html')
 
 def logout_request(request):
     logout(request)

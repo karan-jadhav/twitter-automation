@@ -12,5 +12,6 @@ urlpatterns = [
     path('schedule/', view.schedule, name='home-schedule'),
     path('sentiment/', view.do_sentiment, name='home-sentiment'),
     path('sentimental_redirect/', view.sentimental_redirect, name='sent-redirect'),
+    path('logs/', view.show_logs, name='home-logs'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
