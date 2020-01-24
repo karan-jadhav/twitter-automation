@@ -61,7 +61,7 @@ def get_plot(user):
             "(@[A-Za-z0-9]+)|([^0-9A-Za-z \t]) | (\w +:\ / \ / \S +)", " ", mention.text).split())
         analysis = TextBlob(text)
         polarity += analysis.sentiment.polarity
-        table[itrCount] = {"tweet":mention.text, "screenname":mention.user.screen_name}
+        table[itrCount] = {"tweet":text, "screenname":mention.user.screen_name}
         if (analysis.sentiment.polarity == 0):
             neutral += 1
             table[itrCount]['polarity'] = "Neutral"
