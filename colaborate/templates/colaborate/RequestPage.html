@@ -1,0 +1,18 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<br><br>                
+{% if messages %}
+    {% for message in messages %}
+        <p class="alert alert-{{message.tags}}">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+                  
+<h1>Request For Collaboration</h1>
+
+<div class="container">
+    
+
+</div>
+
+{% endblock content %}
