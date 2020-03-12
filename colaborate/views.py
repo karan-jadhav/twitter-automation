@@ -88,13 +88,6 @@ def work(request, id):
     return render(request, 'colaborate/home.html', context)
 
 
-# def twitter_api(user):
-#     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-#     userObj = User.objects.get(username=user.username)
-#     tokens = userObj.accesstoken_set.get()
-#     auth.set_access_token(tokens.access_token, tokens.access_token_secrete)
-#     api = tweepy.API(auth)
-#     return api
 
 
 
@@ -111,7 +104,7 @@ def tweet(request, id):
                 fileobj = fs.save(a, request.FILES['file'])
                 api.update_with_media(fs.path(fileobj), status)
                 log = Log.objects.create(
-                    user=request.user, action="Tweet With Image by user@{}".format(request.user.username))
+                    user=colabData.ColabMe, action="Tweet With Image by user@{}".format(request.user.username))
                 log.save()
                 fs.delete(fileobj)
                 messages.success(request, 'Successfully tweeted')
@@ -120,7 +113,7 @@ def tweet(request, id):
         else:
             api.update_status(status)
             messages.success(request, 'Successfully tweeted')
-            log = Log.objects.create(user=request.user, action="Text Tweet by user @{}".format(request.user.username))
+            log = Log.objects.create(user=colabData.ColabMe, action="Text Tweet by user @{}".format(request.user.username))
             log.save()
     context = {
         "page": "colab",
@@ -155,7 +148,7 @@ def schedule(request, id):
                     )
                     sch.save()
                     schedule_tweet(sch.id, request.user.username, schedule=diffSecond, priority=5)
-                    log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Media by user @{}".format(
+                    log = Log.objects.create(user=colabData.ColabMe, action="Tweet Scheduled To Run On {} With Media by user @{}".format(
                         str(request.POST.get("sc-date"))+" "+str(request.POST.get("sc-time")), request.user.username))
                     log.save()
                     messages.success(
@@ -168,7 +161,7 @@ def schedule(request, id):
                 )
                 sch.save()
                 schedule_tweet(sch.id, request.user.username, schedule=diffSecond, priority=5)
-                log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Text by user @{}".format(
+                log = Log.objects.create(user=colabData.ColabMe, action="Tweet Scheduled To Run On {} With Text by user @{}".format(
                     str(request.POST.get("sc-date"))+" "+str(request.POST.get("sc-time")), request.user.username))
                 log.save()
                 messages.success(
