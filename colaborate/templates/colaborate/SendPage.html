@@ -1,0 +1,56 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<br><br>                
+{% if messages %}
+    {% for message in messages %}
+        <p class="alert alert-{{message.tags}}">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+                  
+<h1>Collaboration</h1>
+
+
+<div class="container mt-3">
+    <h4><a href="{% url 'colab-request' %}">Your Invitations </a>| <a href="{% url 'colab-send' %}">Sent Invitations</a></h4>
+    <form method="POST" action="">
+    {% csrf_token %}
+        <div class="row mt-3">
+            <div class="col-3 offset-4">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                    <div class="input-group-text">@</div>
+                    </div>
+                    <input type="text" name="username" class="form-control" id="inlineFormInputGroup" placeholder="Username" required>    
+                </div>
+            </div>
+            <div class="col-2">
+            <button type="submit" class="btn btn-primary mb-2">Send Invitation</button></div>
+        </div>
+    </form>
+    <table class="table mt-4">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Account</th>
+            <th scope="col">Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for i in data %}
+            <tr>
+                <th scope="row">{{ i.id }}</th>
+                <td>@{{ i.COlabUserName }}</td>
+                <td>{{ i.Date }}</td>
+                <td><a href class="btn btn-{% ifequal i.Status True %}primary{% else %}warning{% endifequal %}"> {% ifequal i.Status True %} Accepted {% else %} Pending {% endifequal %} <a/></td>
+                <td><a href="{% url 'colab-remove' i.id %}" class="btn btn-danger"> Delete</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>    
+
+</div>
+
+{% endblock content %}

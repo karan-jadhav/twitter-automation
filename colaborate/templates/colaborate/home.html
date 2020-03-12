@@ -12,21 +12,18 @@
 
 <div class="container">
     <div class="row mt-5">
-        <div class="col-3">
-            <a href="{% url 'home-tweet' %}" class="btn btn-primary btn-change2 shadow">Tweet</a>
+        <div class="col-3 offset-3">
+            <a href="{% url 'colab-tweet' id %}" class="btn btn-primary btn-change2 shadow">Tweet</a>
         </div>
         <div class="col-3">
-            <a href="{% url 'home-schedule' %}" class="btn btn-primary btn-change2 shadow">Shedule Tweet</a>
-        </div>
-        <div class="col-3">
-            <a href="{% url 'sent-redirect' %}" class="btn btn-primary shadow">Analyze</a>
+            <a href="{% url 'colab-schedule' id%}" class="btn btn-primary btn-change2 shadow">Shedule Tweet</a>
         </div>
         {% comment %} <div class="col-3">
-            <a href="" class="btn btn-primary shadow">View Tweets</a>
-        </div> {% endcomment %}
+            <a href="{% url 'sent-redirect' %}" class="btn btn-primary shadow">Analyze</a>
+        </div>
         <div class="col-3">
             <a href="{% url 'home-logs' %}" class="btn btn-primary shadow">View Logs</a>
-        </div>
+        </div> {% endcomment %}
     </div>
 
 </div>

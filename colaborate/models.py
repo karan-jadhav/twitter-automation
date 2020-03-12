@@ -5,4 +5,6 @@ from django.contrib.auth.models import User
 class Colaboration(models.Model):
     ColabMe = models.ForeignKey(User, on_delete=models.CASCADE)
     COlabUserName = models.CharField(max_length=200)
-    
+    Status = models.BooleanField(default=False)
+    Date = models.DateTimeField(auto_now_add=True)
+

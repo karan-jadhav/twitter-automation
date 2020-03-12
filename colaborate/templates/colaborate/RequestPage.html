@@ -8,10 +8,33 @@
     {% endfor %}
 {% endif %}
                   
-<h1>Request For Collaboration</h1>
+<h1>Collaboration</h1>
 
-<div class="container">
-    
+
+<div class="container mt-3">
+    <h4><a href="{% url 'colab-request' %}">Your Invitations </a>| <a href="{% url 'colab-send' %}">Sent Invitations</a></h4>
+    <table class="table mt-4">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Account</th>
+            <th scope="col">Date</th>
+            <th scope="col">Work</th>
+            <th scope="col">Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for i in data %}
+            <tr>
+                <th scope="row">{{ i.id }}</th>
+                <td>@{{ i.ColabMe }}</td>
+                <td>{{i.Date}}</td>
+                <td><a href="{% ifequal i.Status True %}{% url 'colab-work' i.id %}{% else %}{% url 'colab-accept' i.id %}{% endifequal %}" class="btn btn-primary">{% ifequal i.Status True %}Work{% else %}Accept{% endifequal %}</a></td>
+                <td><a href="{% url 'colab-remove' i.id %}" class="btn btn-danger">Remove<a/></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>    
 
 </div>
 

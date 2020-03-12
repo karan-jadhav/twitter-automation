@@ -1,0 +1,27 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<br>
+{% if messages %}
+    {% for message in messages %}
+        <p class="alert alert-{{message.tags}}">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+<br>
+<h1>Make Tweets</h1>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-6 offset-3">
+                <form action="" method="post" class="form-group" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <label for="tweet">Tweet Text</label> 
+                    <textarea name="tweet" id="Tweet" cols="40" rows="3" class="form-control" required></textarea>
+                    <br>
+                    <label for="file">File (Optional)</label>
+                    <input type="file" name="file" id="File" class="form-control-file"><br><br>
+                    <input type="submit" name="submit" id="Submit" value="Tweet" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

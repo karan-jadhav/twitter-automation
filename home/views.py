@@ -12,7 +12,6 @@ from django.core.files.storage import FileSystemStorage
 from dateutil import parser
 from datetime import datetime
 from background_task import background
-from django.conf import settings
 import re
 from textblob import TextBlob
 from io import BytesIO
@@ -25,21 +24,31 @@ CONSUMER_SECRET = settings.CONSUMER_SECRET
 
 # Create your views here.
 @background
-def schedule_tweet(tweetid):
+def schedule_tweet(tweetid, colab):
     getTweet = Schedule.objects.get(id=tweetid)
     api = twitter_api(getTweet.user)
     status = getTweet.tweet
     if bool(getTweet.twFile):
         fileName = str(settings.BASE_DIR)+'/media/'+str(getTweet.twFile.name)
         api.update_with_media(fileName, status)
-        log = Log.objects.create(
-            user=getTweet.user, action="Scheduled Tweet With Image")
-        log.save()
+        if colab:
+            log = Log.objects.create(
+                user=getTweet.user, action="Scheduled Tweet With Image by user @{}".format(colab))
+            log.save()
+        else:
+            log = Log.objects.create(
+                user=getTweet.user, action="Scheduled Tweet With Image")
+            log.save()
     else:
         api.update_status(status)
-        log = Log.objects.create(
-            user=getTweet.user, action="Scheduled Text Tweet")
-        log.save()
+        if colab:
+            log = Log.objects.create(
+                user=getTweet.user, action="Scheduled Text Tweet by user @{}".format(colab))
+            log.save()
+        else:
+            log = Log.objects.create(
+                user=getTweet.user, action="Scheduled Text Tweet")
+            log.save()
 
 
 def get_plot(user):
@@ -182,7 +191,7 @@ def callback(request):
         return redirect('home-dash')
     return HttpResponse('Something is wrong')
 
-
+@login_required(login_url="home-page")
 def tweet(request):
     if request.method == "POST":
         api = twitter_api(request.user)
@@ -202,14 +211,19 @@ def tweet(request):
                 messages.warning(request, "Must Be a Image File")
         else:
             api.update_status(status)
+            messages.success(request, 'Successfully tweeted')
             log = Log.objects.create(user=request.user, action="Text Tweet")
             log.save()
-    return render(request, 'home/tweet.html')
+    context = {
+        'page': 'dash'
+    }
+    return render(request, 'home/tweet.html', context)
 
-
+@login_required(login_url="home-page")
 def schedule(request):
     context = {
-        'schedule': True
+        'schedule': True,
+        'page': 'dash'
     }
     if request.method == "POST":
         userTime = parser.parse(str(request.POST.get(
@@ -230,7 +244,7 @@ def schedule(request):
                         user=request.user, tweet=status, twFile=request.FILES['file']
                     )
                     sch.save()
-                    schedule_tweet(sch.id, schedule=diffSecond, priority=5)
+                    schedule_tweet(sch.id, False, schedule=diffSecond, priority=5)
                     log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Media".format(
                         str(request.POST.get("sc-date"))+" "+str(request.POST.get("sc-time"))))
                     log.save()
@@ -243,7 +257,7 @@ def schedule(request):
                     user=request.user, tweet=status
                 )
                 sch.save()
-                schedule_tweet(sch.id, schedule=diffSecond, priority=5)
+                schedule_tweet(sch.id, False, schedule=diffSecond, priority=5)
                 log = Log.objects.create(user=request.user, action="Tweet Scheduled To Run On {} With Text".format(
                     str(request.POST.get("sc-date"))+" "+str(request.POST.get("sc-time"))))
                 log.save()
@@ -251,31 +265,35 @@ def schedule(request):
                     request, 'Successfully Scheduled for {} {}'.format(request.POST.get("sc-date"), request.POST.get("sc-time")))
     return render(request, 'home/schedule.html', context)
 
-
+@login_required(login_url="home-page")
 def do_sentiment(request):
     Plot, table = get_plot(request.user)
     context = {
         'sentiment': True,
         'graphic': Plot,
-        'table': table
+        'table': table,
+        'page': 'dash'
     }
     return render(request, 'home/sentiment.html', context)
 
-
+@login_required(login_url="home-page")
 def sentimental_redirect(request):
     context = {
-        'analyze': True
+        'analyze': True,
+        'page': 'dash'
     }
     return render(request, 'home/sentiment_redirect.html', context)
 
-
+@login_required(login_url="home-page")
 def show_logs(request):
     all_logs = Log.objects.filter(user=request.user)
     context = {
-        'logs': all_logs
+        'logs': all_logs,
+        'page': 'dash'
     }
     return render(request, 'home/logs.html', context)
-
+    
+@login_required(login_url="home-page")
 def logout_request(request):
     logout(request)
     return redirect('home-page')

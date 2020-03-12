@@ -81,6 +81,7 @@
         $(document).ready( function () {
           $('#logs_table').DataTable({
             dom: 'Bfrtip',
+            "order": [[0, 'desc']],
             buttons: [
               'copy', 'csv', 'pdf', 'print'
             ],
