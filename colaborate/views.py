@@ -74,10 +74,8 @@ def remove(request, id):
     red = True
     colabData.delete()
     messages.success(request, "successfully removed")
-    if red:
-        return redirect('colab-request')
-    else:
-        return redirect('colab-send')
+    return redirect('colab-request')
+   
 
 
 @login_required(login_url="home-page")
