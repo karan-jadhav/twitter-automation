@@ -68,11 +68,10 @@ def accept(request, id):
 @login_required(login_url="home-page")
 def remove(request, id):
     colabData = get_object_or_404(Colaboration, id=id)
-    if colabData.COlabUserName == request.user.username:
-        log = Log.objects.create(
-            user=request.user, action="Connection Removed With user @{}".format(colabData.ColabMe.username))
-        log.save()
-        red = True
+    log = Log.objects.create(
+        user=request.user, action="Connection Removed With user @{}".format(colabData.ColabMe.username))
+    log.save()
+    red = True
     colabData.delete()
     messages.success(request, "successfully removed")
     if red:
